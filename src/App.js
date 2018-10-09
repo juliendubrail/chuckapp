@@ -2,29 +2,39 @@ import React, { Component } from 'react';
 import './App.css';
 
 class App extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            quote: 'Chuck Quote'
-        }
-    }
+  // si tu n'utilise pas le constructor pour autre chose que pour set le initial state tu peux
+  // simplement faire ca:
+  state = {
+    quote: 'Chuck Quote',
+  };
 
-    changeQuote(){
-        this.setState({quote:'Chuck Rules'})
-    }
+  changeQuote = () => {
+    this.setState({ quote: 'Chuck Rules' });
+  };
 
-    render(){
-        return (
-            <div className="App">
-                <div className="App-title">{this.state.quote}</div>
-                <div>
-                    <button className="button" onClick={()=>this.changeQuote()}>Yay button</button>
-                    <button className="button">Nay button</button>
-                </div>
-                App Component
-            </div>
-        )
-    }
+  render() {
+    // c'est bien de prendre l'habite de desctucturer, meme si la c'est overkill
+    const { quote } = this.state;
+
+    return (
+      <div className="App">
+        <div className="App-title">{quote}</div>
+        <div>
+          {/* 
+        il vaut mieux eviter le plus possible de definir des fonctions dans le jsx. Tu peux check les 
+        raisons dans ici: https://stackoverflow.com/questions/36677733/why-shouldnt-jsx-props-use-arrow-functions-or-bind
+        Du coup pour le onClick event handler, on peu referencer la App class method "changeQuote" directement au lieu de crer une fonction qui call changeQuote.
+        L'event rest disponible comme premier argument de this.changeQuote si t'en as besoin.
+        */}
+          <button className="button" onClick={this.changeQuote}>
+            Yay button
+          </button>
+          <button className="button">Nay button</button>
+        </div>
+        App Component
+      </div>
+    );
+  }
 }
 
 export default App;
