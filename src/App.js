@@ -12,6 +12,15 @@ class App extends Component {
     this.setState({ quote: 'Chuck Rules' });
   };
 
+  searchQuote = () => {
+        const FETCH_URL = 'http://api.icndb.com/jokes/random';
+        fetch(FETCH_URL, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(json => console.log('json', json))
+   };
+
   render() {
     // c'est bien de prendre l'habite de desctucturer, meme si la c'est overkill
     const { quote } = this.state;
@@ -29,7 +38,7 @@ class App extends Component {
           <button className="button" onClick={this.changeQuote}>
             Yay button
           </button>
-          <button className="button">Nay button</button>
+           <button className="button" onClick={this.searchQuote}>Nay button</button>
         </div>
         App Component
       </div>
