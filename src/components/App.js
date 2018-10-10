@@ -7,29 +7,30 @@ class App extends Component {
   // simplement faire ca:
   state = {
     quote: 'Chuck Quote',
-    // {
-    //     id:1,
-    //     abbvTitle:Good,
-    //     items:[
-    //         {quote:'Chuckk'}
-    //     ],
-    //     clicked: true
-    // },
-    // {
-    //     id:2,
-    //     abbvTitle:Bad,
-    //     items:[
-    //         {quote: null}
-    //     ],
-    //     clicked:false
-    // },
-    // {
-    //     id:3,
-    //     abbvTitle:All,
-    //     items:[
-    //         {quote:null}
-    //     ]
-    // }
+    columns: [
+        {
+            id:1,
+            abbvTitle: 'Good',
+        items:[
+            {quote:'Chuckk'}
+        ],
+        clicked: false
+    },
+    {
+        id:2,
+        abbvTitle:'Bad',
+        items:[
+            {quote: null}
+        ],
+        clicked:true
+    },
+    {
+        id:3,
+        abbvTitle:'All',
+        items:[
+            {quote:null}
+        ]
+    }]
 };
 
   changeQuote = () => {
@@ -51,10 +52,10 @@ class App extends Component {
    };
 
    getClickedButton = () => {
-       return this.state.find((button) => button.clicked)
+       return this.state.columns.find((button) => button.clicked)
    }
 
-   // setClickedButtom = (buttonId) => {
+   // setClickedButton = (buttonId) => {
    //     this.state.map((buttonObj) => {
    //         buttonObj.id === buttonId  ? buttonObj.clicked = true : buttonObj.clicked = false;
    //     });
@@ -63,6 +64,7 @@ class App extends Component {
    submitQuote = (quote) => {
        const clickedButton = this.getClickedButton();
        clickedButton.items.push(quote)
+       console.log(this.state.columns[0].items)
    }
 
   render() {
@@ -79,7 +81,7 @@ class App extends Component {
         Du coup pour le onClick event handler, on peu referencer la App class method "changeQuote" directement au lieu de crer une fonction qui call changeQuote.
         L'event rest disponible comme premier argument de this.changeQuote si t'en as besoin.
         */}
-          <button className="button" onClick={this.submitQuote}>
+          <button className="button" onClick={this.submitQuote({quote})}>
             Yay button
           </button>
            <button className="button" onClick={this.searchQuote}>
