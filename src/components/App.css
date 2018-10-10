@@ -1,0 +1,39 @@
+.App {
+    text-align: center;
+    font-size: 35px;
+    margin-top: 2%;
+    border: solid 2px;
+}
+
+.App-title {
+    font-size: 50px;
+    color: #888
+}
+
+.button {
+    display: inline;
+    margin: 10px;
+}
+
+.tablecontainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 50px;
+    border: solid 2px blue;
+}
+
+.column {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    flex: 0 1 500px;
+    border: solid 1px green;
+}
+
+.table_quote{
+    text-align: left;
+}
