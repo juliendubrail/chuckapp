@@ -9,7 +9,7 @@ class App extends Component {
     quote: 'Chuck Quote',
     columns: [
         {
-            id:1,
+            id:"1",
             abbvTitle: 'Good',
         items:[
             {quote:'Chuckk'}
@@ -17,7 +17,7 @@ class App extends Component {
         clicked: false
     },
     {
-        id:2,
+        id:"2",
         abbvTitle:'Bad',
         items:[
             {quote: null}
@@ -37,7 +37,7 @@ class App extends Component {
     this.setState({ quote: 'Chuck Rules' });
   };
 
-  searchQuote = () => {
+  fetchQuote = () => {
         const FETCH_URL = 'http://api.icndb.com/jokes/random';
         fetch(FETCH_URL, {
             method: 'GET'
@@ -45,7 +45,6 @@ class App extends Component {
         .then(response => response.json())
         .then(json => {
         const quote = json.value.joke;
-        console.log('joke', quote);
         this.setState({quote})
         } )
         .catch(error =>console.log(error))
@@ -55,16 +54,20 @@ class App extends Component {
        return this.state.columns.find((button) => button.clicked)
    }
 
-   // setClickedButton = (buttonId) => {
-   //     this.state.map((buttonObj) => {
-   //         buttonObj.id === buttonId  ? buttonObj.clicked = true : buttonObj.clicked = false;
-   //     });
-   // }
+   setCategory = (buttonId) => {
+       // this.state.columns.map((buttonObj) =>
+       // buttonObj.id === buttonId ? buttonObj.clicked = true : buttonObj.clicked = false
+       console.log(buttonId)
+       console.log(this.state.columns.map((button) => button.clicked))
+       //this.state.columns.map((category) => buttonId === category.id ? category.clicked = true : category.clicked = false)
+    }
 
-   submitQuote = (quote) => {
+   submitQuote = (quote, id) => {
+       // this.setClickedButton(id);
+       this.setCategory(id)
        const clickedButton = this.getClickedButton();
        clickedButton.items.push(quote)
-       console.log(this.state.columns[0].items)
+       console.log(this.state.columns[1].items)
    }
 
   render() {
@@ -81,14 +84,16 @@ class App extends Component {
         Du coup pour le onClick event handler, on peu referencer la App class method "changeQuote" directement au lieu de crer une fonction qui call changeQuote.
         L'event rest disponible comme premier argument de this.changeQuote si t'en as besoin.
         */}
-          <button className="button" onClick={this.submitQuote({quote})}>
+          <button className="button" id="1" onClick={this.submitQuote({quote}, this.id)}>
             Yay button
           </button>
-           <button className="button" onClick={this.searchQuote}>
+           <button className="button" id="2" onClick={this.fetchQuote}>
                Nay button
            </button>
-        </div>
+           <button className="button" id="3" onClick={this.setCategory()}>Test</button>
+       </div>
         <Table />
+
         App Component
       </div>
     );

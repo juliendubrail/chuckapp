@@ -11,6 +11,9 @@ class Table extends Component {
                 <div className="column">
                     <h4>Bad Jokes</h4>
                 </div>
+                <div className="column">
+                    <h4>All Jokes</h4>
+                </div>
                 Table Component
             </div>
         )
