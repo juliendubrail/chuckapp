@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding:0;
     font-family: sans-serif;
+    background-image:url(https://wallpaper-gallery.net/images/chuck-norris-wallpapers/chuck-norris-wallpapers-8.jpg);
 }
 
 .App {
@@ -42,4 +43,8 @@ body {
 
 .table_quote{
     text-align: left;
+}
+
+.menuButtons h5{
+    color: white;
 }

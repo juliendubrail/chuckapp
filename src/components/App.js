@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Table from './table';
+import MenuButtons from './menuButtons';
 import './App.css';
 
 class App extends Component {
@@ -9,7 +10,7 @@ class App extends Component {
     quote: 'Chuck Quote',
     columns: [
         {
-            id:"1",
+            id:'good',
             abbvTitle: 'Good',
         items:[
             {quote:'Chuckk'}
@@ -17,7 +18,7 @@ class App extends Component {
         clicked: false
     },
     {
-        id:"2",
+        id:'bad',
         abbvTitle:'Bad',
         items:[
             {quote: null}
@@ -25,7 +26,7 @@ class App extends Component {
         clicked:true
     },
     {
-        id:3,
+        id:'all',
         abbvTitle:'All',
         items:[
             {quote:null}
@@ -52,23 +53,28 @@ class App extends Component {
 
    getClickedButton = () => {
        return this.state.columns.find((button) => button.clicked)
-   }
+   };
 
-   setCategory = (buttonId) => {
+   setCategory = (clicked_id) => {
        // this.state.columns.map((buttonObj) =>
        // buttonObj.id === buttonId ? buttonObj.clicked = true : buttonObj.clicked = false
-       console.log(buttonId)
+       //console.log(buttonId)
+       console.log(clicked_id)
        console.log(this.state.columns.map((button) => button.clicked))
-       //this.state.columns.map((category) => buttonId === category.id ? category.clicked = true : category.clicked = false)
+       this.state.columns.map((category) => clicked_id === category.id ? category.clicked = true : category.clicked = false)
     }
 
-   submitQuote = (quote, id) => {
-       // this.setClickedButton(id);
-       this.setCategory(id)
+    updateQuotes = (e) => {
+        console.log(e);
+        this.fetchQuote();
+    }
+
+   submitQuote = (quote, e) => {
+       this.setCategory(e);
        const clickedButton = this.getClickedButton();
        clickedButton.items.push(quote)
        console.log(this.state.columns[1].items)
-   }
+   };
 
   render() {
     // c'est bien de prendre l'habite de desctucturer, meme si la c'est overkill
@@ -77,21 +83,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-title">{quote}</div>
-        <div>
-          {/*
-        il vaut mieux eviter le plus possible de definir des fonctions dans le jsx. Tu peux check les
-        raisons dans ici: https://stackoverflow.com/questions/36677733/why-shouldnt-jsx-props-use-arrow-functions-or-bind
-        Du coup pour le onClick event handler, on peu referencer la App class method "changeQuote" directement au lieu de crer une fonction qui call changeQuote.
-        L'event rest disponible comme premier argument de this.changeQuote si t'en as besoin.
-        */}
-          <button className="button" id="1" onClick={this.submitQuote({quote}, this.id)}>
-            Yay button
-          </button>
-           <button className="button" id="2" onClick={this.fetchQuote}>
-               Nay button
-           </button>
-           <button className="button" id="3" onClick={this.setCategory()}>Test</button>
-       </div>
+        <MenuButtons updateQuotes={this.updateQuotes} />
         <Table />
 
         App Component
