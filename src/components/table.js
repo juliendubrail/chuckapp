@@ -7,7 +7,7 @@ class Table extends Component {
 
     render() {
         const allQuotes = QuotesApi.all().map(q => (<li key={q.number}> {q.quote}</li>));
-        const badQuotes = QuotesApi.get().map(q => (<li key={q.number}> {q.quote}</li>));
+        //const badQuotes = QuotesApi.get().map(q => (<li key={q.number}> {q.quote}</li>));
 
         return(
              <div className="tablecontainer">
@@ -17,7 +17,7 @@ class Table extends Component {
                 </div>
                 <div className="column" id="bad">
                     <h4>Bad Jokes</h4>
-                    <ul>{badQuotes}</ul>
+                    <ul></ul>
                 </div>
                 <div className="column" id="all">
                     <h4>All Jokes</h4>
