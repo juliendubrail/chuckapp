@@ -6,14 +6,6 @@ class MenuButtons extends Component {
         this.props.updateQuotes(e.target.id);
     }
 
-    // fetchQuote(){
-    //     this.props.fetchQuote();
-    // }
-
-    changeQuote = () => {
-        this.props.changeQuote();
-    }
-
     render() {
         return (
         <div className="menuButtons">

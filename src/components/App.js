@@ -4,8 +4,6 @@ import MenuButtons from './menuButtons';
 import './App.css';
 
 class App extends Component {
-  // si tu n'utilise pas le constructor pour autre chose que pour set le initial state tu peux
-  // simplement faire ca:
   state = {
     quote: 'Chuck Quote',
     columns: [
@@ -56,10 +54,6 @@ class App extends Component {
    };
 
    setCategory = (clicked_id) => {
-       // this.state.columns.map((buttonObj) =>
-       // buttonObj.id === buttonId ? buttonObj.clicked = true : buttonObj.clicked = false
-       //console.log(buttonId)
-       console.log(clicked_id)
        console.log(this.state.columns.map((button) => button.clicked))
        this.state.columns.map((category) => clicked_id === category.id ? category.clicked = true : category.clicked = false)
     }
@@ -67,6 +61,10 @@ class App extends Component {
     updateQuotes = (e) => {
         console.log(e);
         this.fetchQuote();
+        this.setCategory(e);
+        const clickedButton = this.getClickedButton();
+        clickedButton.items.push(this.state);
+        console.log(this.state);
     }
 
    submitQuote = (quote, e) => {
@@ -77,15 +75,13 @@ class App extends Component {
    };
 
   render() {
-    // c'est bien de prendre l'habite de desctucturer, meme si la c'est overkill
     const { quote } = this.state;
 
     return (
       <div className="App">
         <div className="App-title">{quote}</div>
         <MenuButtons updateQuotes={this.updateQuotes} />
-        <Table />
-
+        <Table colums={this.state.columns}/>
         App Component
       </div>
     );
