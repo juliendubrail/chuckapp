@@ -1,13 +1,15 @@
 const QuotesApi = {
     quotes: [
-    {number:1 , quote: "Chcuk Rules", category: "good"},
-    {number:2 , quote: "Chcuk Zbra", category: "good"},
-    {number:3, quote:"Chuck is dumb", category:1}
+    {id:1 , text: "Chcuk Rules", good: false},
+    {id:2 , text: "Chcuk Zbra", good: true},
+    {id:3, text:"Chuck is dumb", good: false}
     ],
     all: function() { return this.quotes },
-    get: function(id) {
-        const isQuote = q => q.category === id
-        return this.quotes.find(isQuote)
+    good: function() {
+        return this.quotes.filter(q=> q.good)
+    },
+    bad: function () {
+        return this.quotes.filter(q=> !q.good)
     }
 }
 

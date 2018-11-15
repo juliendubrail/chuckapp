@@ -3,21 +3,19 @@ import QuotesApi from '../api';
 
 class Table extends Component {
 
-
-
     render() {
-        const allQuotes = QuotesApi.all().map(q => (<li key={q.number}> {q.quote}</li>));
-        //const badQuotes = QuotesApi.get().map(q => (<li key={q.number}> {q.quote}</li>));
-
+        const allQuotes = this.props.allQuotes.map(q => (<li key={q.id}> { '"' + q.text + '"'}</li>));
+        const goodQuotes = this.props.allQuotes.filter(q => q.category === 'good').map(q => (<li key={q.id}> { '"' + q.text + '"'}</li>));
+        const badQuotes = this.props.allQuotes.filter(q => q.category === 'bad').map(q=>(<li key={q.id}> { '"' + q.text + '"'}</li>));
         return(
              <div className="tablecontainer">
                 <div className="column" id="good">
                     <h4>Good Jokes</h4>
-                    <p className="table_quote">Chuck Norris doesn't use GUI, he prefers COMMAND line.</p>
+                    <ul>{goodQuotes}</ul>
                 </div>
-                <div className="column" id="bad">
+                <div className="column" id="bad" >
                     <h4>Bad Jokes</h4>
-                    <ul></ul>
+                    <ul>{badQuotes}</ul>
                 </div>
                 <div className="column" id="all">
                     <h4>All Jokes</h4>
