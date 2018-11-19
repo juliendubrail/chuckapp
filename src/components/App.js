@@ -15,10 +15,6 @@ componentDidMount(){
     this.fetchQuote();
 }
 
-  changeQuote = () => {
-    this.fetchQuote();
-    console.log(this.state.quotes);
-  };
 
   fetchQuote = () => {
         fetch(API, {
@@ -57,7 +53,7 @@ componentDidMount(){
     return (
       <div className="App">
         <div className="App-title"> {'"' + newQuote.text + '"'} </div>
-        <MenuButtons changeQuote={this.changeQuote} addQuote={this.addQuote}/>
+        <MenuButtons  addQuote={this.addQuote}/>
         <Table
             allQuotes={this.state.quotes}
             removeQuote={this.removeQuote.bind(this)}
