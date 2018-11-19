@@ -32,7 +32,6 @@ componentDidMount(){
    };
 
    addQuote = (e) => {
-        console.log(e.target.id);
        this.setState({
            quotes: [...this.state.quotes, {
                id:this.state.newQuote.id,
@@ -43,6 +42,14 @@ componentDidMount(){
        this.fetchQuote();
     console.log(this.state.quotes);
    };
+   
+   removeQuote = index => {
+    const quotes = [...this.state.quotes];
+    quotes.splice(index, 1);
+    this.setState({
+      quotes
+    });
+  };
 
   render() {
     const { newQuote } = this.state;
@@ -53,8 +60,8 @@ componentDidMount(){
         <MenuButtons changeQuote={this.changeQuote} addQuote={this.addQuote}/>
         <Table
             allQuotes={this.state.quotes}
+            removeQuote={this.removeQuote.bind(this)}
             />
-        App Component
       </div>
     );
   }

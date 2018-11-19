@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import QuotesApi from '../api';
 
 class Table extends Component {
 
     render() {
-        const allQuotes = this.props.allQuotes.map(q => (<li key={q.id}> { '"' + q.text + '"'}</li>));
+        const allQuotes = this.props.allQuotes.map((q, index) => (
+        <li key={q.id}>
+         { '"' + q.text + '"'}
+         <button onClick={() => this.props.removeQuote(index)}>Remove</button>
+         </li>));
         const goodQuotes = this.props.allQuotes.filter(q => q.category === 'good').map(q => (<li key={q.id}> { '"' + q.text + '"'}</li>));
         const badQuotes = this.props.allQuotes.filter(q => q.category === 'bad').map(q=>(<li key={q.id}> { '"' + q.text + '"'}</li>));
         return(
@@ -21,8 +24,6 @@ class Table extends Component {
                     <h4>All Jokes</h4>
                     <ul>{allQuotes}</ul>
                 </div>
-                Table Component
-
             </div>
         )
     }
