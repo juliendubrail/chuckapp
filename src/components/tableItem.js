@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class TableItem extends Component {
-    render(){
-        return (
-            <div className></div>
-        )
-    }
-}
+// changer a functional component comme pas d'utilisation des lifecycleHooks ou tu state.
+const TableItem = ({ item, onClick }) => (
+  <li>
+    {item.joke}
+    <button onClick={() => onClick(item.id)}>Remove</button>
+  </li>
+);
 
 export default TableItem;

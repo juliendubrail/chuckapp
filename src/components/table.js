@@ -1,32 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import TableItem from './TableItem';
 
-class Table extends Component {
+/* 
+  ici meme si le TableItem est relativement simple on peu l'extraire dans un autre component, il risque de devenir
+  plus complex plus tard si on rajoute des feature etc. Ou alors le Table component pourrait devenir plus complex et ca rendrait le code
+  plus lisible d'extraire un max de trucs.
+*/
 
-    render() {
-        const allQuotes = this.props.allQuotes.map((q, index) => (
-        <li key={q.id}>
-         { '"' + q.text + '"'}
-         <button onClick={() => this.props.removeQuote(index)}>Remove</button>
-         </li>));
-        const goodQuotes = this.props.allQuotes.filter(q => q.category === 'good').map(q => (<li key={q.id}> { '"' + q.text + '"'}</li>));
-        const badQuotes = this.props.allQuotes.filter(q => q.category === 'bad').map(q=>(<li key={q.id}> { '"' + q.text + '"'}</li>));
-        return(
-             <div className="tablecontainer">
-                <div className="column" id="good">
-                    <h4>Good Jokes</h4>
-                    <ul>{goodQuotes}</ul>
-                </div>
-                <div className="column" id="bad" >
-                    <h4>Bad Jokes</h4>
-                    <ul>{badQuotes}</ul>
-                </div>
-                <div className="column" id="all">
-                    <h4>All Jokes</h4>
-                    <ul>{allQuotes}</ul>
-                </div>
-            </div>
-        )
-    }
-}
+const Table = ({ data, removeQuote }) => {
+  const items = data.map(joke => <TableItem key={joke.id} item={joke} onClick={removeQuote} />);
+  return (
+    <div className="column">
+      <ul>{items}</ul>
+    </div>
+  );
+};
 
 export default Table;
