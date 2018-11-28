@@ -1,5 +1,5 @@
 import React from 'react';
-import TableItem from './TableItem';
+import TableItem from './tableItem';
 
 /* 
   ici meme si le TableItem est relativement simple on peu l'extraire dans un autre component, il risque de devenir

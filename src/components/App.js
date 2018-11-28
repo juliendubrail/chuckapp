@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import Table from './Table';
+import Table from './table';
 import Hero from './Hero';
 import '../App.css';
 
 const API = 'http://api.icndb.com/jokes/random';
 
-/* 
-  Generalement c'est pas mal de centraliser la buisness logic dans un endroit qui est le container / smart component / statefull component (juste differentes manieres de l'appeler) qui hold le state et prepare les props 
-  pour ses children components qui eux s'occupent juste de render ce qu'ils recoivent. Ici App est le container et tous les autres sont des functional / stateless components.
-*/
+
 
 class App extends Component {
   /* 
@@ -68,9 +65,12 @@ class App extends Component {
     byId: {},
     likedJokesIds: [],
     dislikedJokesIds: [],
+    error: null, 
+    isLoading: false
   };
 
   componentDidMount() {
+    this.setState({ isLoading: true });
     this.fetchQuote();
   }
 
@@ -83,10 +83,10 @@ class App extends Component {
       // TODO:
       // creer un error state: si le fetch fail, montrer un message pour avertir l'utilisateur et retry
       // il faudra rajouter une prop error (initialement false) au state. Et la set true dans le catch. Puis reagir a cette prop dans le jsx.
-      .catch(error => console.log(error));
+      .catch(error => this.setState({error, isLoading: false}));
   };
 
-  setCurrentJoke = data => this.setState({ currentJoke: data.value });
+  setCurrentJoke = data => this.setState({ currentJoke: data.value, isLoading: false });
 
   handleVote = (liked = true) => {
     const { currentJoke } = this.state;
@@ -109,7 +109,7 @@ class App extends Component {
         },
         [targetArray]: [id, ...this.state[targetArray]],
         // je rajoute la nouvelle id au debut de l'array pour que la nouvelle joke apparaisse au top du Table component et que le user la voit direct.
-      },
+    },
       this.fetchQuote,
     );
     /* 
@@ -146,7 +146,7 @@ class App extends Component {
 
   render() {
     console.log(this.state); // check comment le state evolue quand tu ajoutes ou enleve les jokes
-    const { currentJoke, byId, likedJokesIds, dislikedJokesIds } = this.state;
+    const { currentJoke, byId, likedJokesIds, dislikedJokesIds, error, isLoading } = this.state;
     const likedJokes = likedJokesIds.map(id => byId[id]);
     const dislikedJokes = dislikedJokesIds.map(id => byId[id]);
     // TODO:
@@ -164,7 +164,13 @@ class App extends Component {
     // quand on fetch une nouvelle blague (meme si on le verra que si la fetch met du temps). Pour ca il faut:
     // - rajouter une propriété 'loading' au state et la set true / false aux bons moments
     // - dans le jsx render "loading..." si this.state.loading est true
-
+    if(error){
+      return <p>{error.message}</p>;
+    }
+    
+    if (isLoading) {
+      return <p>Loading ...</p>;
+    }
     return (
       <div className="app">
         <Hero
@@ -173,6 +179,7 @@ class App extends Component {
           heroActionsTitle={'Select a Category'}
           onHeroActionClick={this.handleVote}
         />
+        {isLoading ? <img alt="Loading..." src="https://i.imgur.com/LVHmLnb.gif" /> : ''}
         <div className="tablecontainer">
           <Table data={likedJokes} removeQuote={this.removeQuote} />
           <Table data={dislikedJokes} removeQuote={this.removeQuote} />
