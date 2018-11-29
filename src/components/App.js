@@ -5,8 +5,6 @@ import '../App.css';
 
 const API = 'http://api.icndb.com/jokes/random';
 
-
-
 class App extends Component {
   /* 
   une tres bonne technique de store management est la "normalisation". Voir le cours gratos egghead building applications with idiomatic redux. Il est long mais tu le fait
@@ -65,8 +63,8 @@ class App extends Component {
     byId: {},
     likedJokesIds: [],
     dislikedJokesIds: [],
-    error: null, 
-    isLoading: false
+    error: null,
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -74,19 +72,35 @@ class App extends Component {
     this.fetchQuote();
   }
 
-  fetchQuote = () => {
-    fetch(API, {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(this.setCurrentJoke)
-      // TODO:
-      // creer un error state: si le fetch fail, montrer un message pour avertir l'utilisateur et retry
-      // il faudra rajouter une prop error (initialement false) au state. Et la set true dans le catch. Puis reagir a cette prop dans le jsx.
-      .catch(error => this.setState({error, isLoading: false}));
+  // fetchQuote = () => {
+  //   fetch(API, {
+  //     method: 'GET',
+  //   })
+  //     .then(response => response.json())
+  //     .then(this.setCurrentJoke)
+  //     .catch(error => this.setState({ error, isLoading: false }));
+  // };
+
+  // ZBRA
+  // j'ai refactor fetchQuote pour utiliser async await qui est plus sexy, le error handling se fait dans un try catch du coup.
+  // si tu uncomment la ligne 92 et rafraichit tu verra l'erreur.
+  fetchQuote = async () => {
+    try {
+      const response = await fetch(API, { method: 'GET' });
+      const parsedResponse = await response.json();
+      this.setCurrentJoke(parsedResponse);
+      // throw Error(`I'm an error`);
+    } catch (error) {
+      this.setState({ error, isLoading: false });
+    }
   };
 
   setCurrentJoke = data => this.setState({ currentJoke: data.value, isLoading: false });
+  // ZBRA
+  // ici il faut aussi reset le error state a false (comme tu fais pour le loading state), sinon il restera tjs true apres une premiere erreur et ta
+  // render function returnera tjs l'erreur (a moin que le user rafraichisse).
+  // Je realise aussi qu'on utilise setCurrentJoke que ici, donc c'etait un peu trop tot pour extraire ce code dans sa propre fonction,
+  // pour le moment on pourrait simplement call this.setState ligne 88 comme on fait en cas d'erreur.
 
   handleVote = (liked = true) => {
     const { currentJoke } = this.state;
@@ -109,7 +123,7 @@ class App extends Component {
         },
         [targetArray]: [id, ...this.state[targetArray]],
         // je rajoute la nouvelle id au debut de l'array pour que la nouvelle joke apparaisse au top du Table component et que le user la voit direct.
-    },
+      },
       this.fetchQuote,
     );
     /* 
@@ -159,18 +173,19 @@ class App extends Component {
       mais ca veut dire que les jokes sont pas ordonnées dans leur ordre d'arrivée. Donc j'ai décidé de merge les deux array en une nouvelle array en ordonnant la nouvelle array
       avec les liked jokes on top.
     */
-    // TODO:
-    // Rajouter un loading state: on voit undefined tres rapidement quand on load, il faudrait que ca dise 'loading...'. Pareil quand
-    // quand on fetch une nouvelle blague (meme si on le verra que si la fetch met du temps). Pour ca il faut:
-    // - rajouter une propriété 'loading' au state et la set true / false aux bons moments
-    // - dans le jsx render "loading..." si this.state.loading est true
-    if(error){
+
+    if (error) {
       return <p>{error.message}</p>;
     }
-    
-    if (isLoading) {
-      return <p>Loading ...</p>;
-    }
+    // ZBRA
+    // le problem avec ca c'est que comme on return ici si il y a une erreur, les boutons ne sont plus presents, et la seule options pour le user est de rafraichir la page.
+    // ce qui est ok. Mais idealement tu montrerais un retry bouton sous le error message, qui callerait simplement this.fetchQuote();
+
+    // ZBRA
+    // if (isLoading) {
+    //   return <p>Loading ...</p>;
+    // }
+    /* au final meme si ce state fonctionne bien ici, il apporte rien de plus que avec l'image donc autant en garder qu'un*/
     return (
       <div className="app">
         <Hero
@@ -179,7 +194,14 @@ class App extends Component {
           heroActionsTitle={'Select a Category'}
           onHeroActionClick={this.handleVote}
         />
-        {isLoading ? <img alt="Loading..." src="https://i.imgur.com/LVHmLnb.gif" /> : ''}
+        {/* {isLoading ? <img alt="Loading..." src="https://i.imgur.com/LVHmLnb.gif" /> : ''} */}
+        {/*
+          // ZBRA 
+          Comme tu fais rien dans le cas ou isLoading est falsy tu peu utiliser la syntax ci-dessous, c'est juste une question de preference.
+          Dans une plus grosse app avec plusieurs endroit ou on aurait un Loader on l'aurait extrait dans son propre component en lui passant des props
+          si on veut qu'il soit configurable (genre passer differentes images etc). 
+        */}
+        {isLoading && <img alt="Loading..." src="https://i.imgur.com/LVHmLnb.gif" />}
         <div className="tablecontainer">
           <Table data={likedJokes} removeQuote={this.removeQuote} />
           <Table data={dislikedJokes} removeQuote={this.removeQuote} />
