@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import memoize from 'memoize-one';
 import Table from './table';
 import Hero from './Hero';
 import '../App.css';
@@ -161,8 +162,11 @@ class App extends Component {
   render() {
     console.log(this.state); // check comment le state evolue quand tu ajoutes ou enleve les jokes
     const { currentJoke, byId, likedJokesIds, dislikedJokesIds, error, isLoading } = this.state;
-    const likedJokes = likedJokesIds.map(id => byId[id]);
-    const dislikedJokes = dislikedJokesIds.map(id => byId[id]);
+    const likedJokes = memoize((likedJokesIds, id) =>
+    likedJokesIds.filter(id => byId[id]));
+    const dislikedJokes = memoize((dislikedJokesIds, id) =>
+    dislikedJokesIds.filter(id => byId[id])
+    );
     // TODO:
     // Memoize ces maps: https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#what-about-memoization
     const allJokes = [...likedJokes, ...dislikedJokes];
@@ -175,7 +179,12 @@ class App extends Component {
     */
 
     if (error) {
-      return <p>{error.message}</p>;
+      return (
+        <div className="app">
+        <p>{error.message}</p>
+        <button onClick={this.fetchQuote()}>Retry</button>
+        </div>
+      );
     }
     // ZBRA
     // le problem avec ca c'est que comme on return ici si il y a une erreur, les boutons ne sont plus presents, et la seule options pour le user est de rafraichir la page.
