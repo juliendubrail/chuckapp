@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Button from './Button';
 
 const HeroActions = ({ heroActionsTitle, onHeroActionClick }) => {
@@ -33,7 +34,6 @@ const HeroActions = ({ heroActionsTitle, onHeroActionClick }) => {
   parties de l'app.
 */
 const Hero = props => {
-  // Ce component devroit etre fonctionel (vs class) puisqu'on utilise ni le state ni les lifecylehooks.
   const { title, heroActions, heroActionsTitle, onHeroActionClick } = props;
   const heroActionsProps = { heroActionsTitle, onHeroActionClick };
   return (

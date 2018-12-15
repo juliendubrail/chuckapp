@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import memoize from 'memoize-one';
-import Table from './table';
-import Hero from './Hero';
+
 import '../App.css';
+import Table from './Table';
+import Hero from './Hero';
 
 const API = 'http://api.icndb.com/jokes/random';
 
 class App extends Component {
-  /* 
+  /*
   une tres bonne technique de store management est la "normalisation". Voir le cours gratos egghead building applications with idiomatic redux. Il est long mais tu le fait
   serieusement tu vas apprendre plein de trucs (fait par le createur de redux). L'idée c'est de normaliser (homogeneiser) la data que tu recoit de ton api. L'api pourrait te retourner une array dans certains cas
   (un array de jokes), ou un objet dans d'autres etc. Meme si c'est peut etre pas le cas avec cette api la, c'est un bonne habitude a prendre. Parce que une fois que la forme de la data est
@@ -69,47 +69,36 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.setState({ isLoading: true });
-    this.fetchQuote();
+    this.setState({ isLoading: true }, this.fetchQuote);
   }
 
-  // fetchQuote = () => {
-  //   fetch(API, {
-  //     method: 'GET',
-  //   })
-  //     .then(response => response.json())
-  //     .then(this.setCurrentJoke)
-  //     .catch(error => this.setState({ error, isLoading: false }));
-  // };
-
-  // ZBRA
-  // j'ai refactor fetchQuote pour utiliser async await qui est plus sexy, le error handling se fait dans un try catch du coup.
-  // si tu uncomment la ligne 92 et rafraichit tu verra l'erreur.
   fetchQuote = async () => {
     try {
       const response = await fetch(API, { method: 'GET' });
       const parsedResponse = await response.json();
       this.setCurrentJoke(parsedResponse);
-      // throw Error(`I'm an error`);
     } catch (error) {
       this.setState({ error, isLoading: false });
     }
   };
 
   setCurrentJoke = data => this.setState({ currentJoke: data.value, isLoading: false });
-  // ZBRA
-  // ici il faut aussi reset le error state a false (comme tu fais pour le loading state), sinon il restera tjs true apres une premiere erreur et ta
-  // render function returnera tjs l'erreur (a moin que le user rafraichisse).
-  // Je realise aussi qu'on utilise setCurrentJoke que ici, donc c'etait un peu trop tot pour extraire ce code dans sa propre fonction,
-  // pour le moment on pourrait simplement call this.setState ligne 88 comme on fait en cas d'erreur.
+  /*
+    ici il faut aussi reset le error state a false (comme tu fais pour le loading state), sinon il restera tjs true apres une premiere erreur et ta
+    render function returnera tjs l'erreur (a moin que le user rafraichisse).
+    Je realise aussi qu'on utilise setCurrentJoke que ici, donc c'etait un peu trop tot pour extraire ce code dans sa propre fonction,
+    pour le moment on pourrait simplement call this.setState ligne 88 comme on fait en cas d'erreur.
+  */
 
   handleVote = (liked = true) => {
     const { currentJoke } = this.state;
     const { id } = currentJoke;
     const targetArray = liked ? 'likedJokesIds' : 'dislikedJokesIds';
-    // au lieu de faire ca on pourrait appeler une fonction pour les likedJokes et une autre pour les dislikedJokes: e.g
-    // if (liked) this.setLikedJoke(id);
-    // else this.setdislikedJoke(id);
+    /*
+      au lieu de faire ca on pourrait appeler une fonction pour les likedJokes et une autre pour les dislikedJokes: e.g
+      if (liked) this.setLikedJoke(id);
+      else this.setdislikedJoke(id);
+    */
     this.setState(
       {
         byId: {
@@ -162,15 +151,10 @@ class App extends Component {
   render() {
     console.log(this.state); // check comment le state evolue quand tu ajoutes ou enleve les jokes
     const { currentJoke, byId, likedJokesIds, dislikedJokesIds, error, isLoading } = this.state;
-    const likedJokes = memoize((likedJokesIds, id) =>
-    likedJokesIds.filter(id => byId[id]));
-    const dislikedJokes = memoize((dislikedJokesIds, id) =>
-    dislikedJokesIds.filter(id => byId[id])
-    );
-    // TODO:
-    // Memoize ces maps: https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#what-about-memoization
+    const likedJokes = likedJokesIds.map(id => byId[id]);
+    const dislikedJokes = dislikedJokesIds.map(id => byId[id]);
     const allJokes = [...likedJokes, ...dislikedJokes];
-    /* 
+    /*
       j'avais commencer par utiliser Object.keys pour transformer l'objet byId en array:
       const allJokes = Object.keys(byId).map(id => byId[id]);
       pour ensuite l'utilisée pour <Table data={allJokes} />
@@ -181,20 +165,16 @@ class App extends Component {
     if (error) {
       return (
         <div className="app">
-        <p>{error.message}</p>
-        <button onClick={this.fetchQuote()}>Retry</button>
+          <p>{error.message}</p>
+          <button onClick={this.fetchQuote()}>Retry</button>
         </div>
       );
     }
-    // ZBRA
-    // le problem avec ca c'est que comme on return ici si il y a une erreur, les boutons ne sont plus presents, et la seule options pour le user est de rafraichir la page.
-    // ce qui est ok. Mais idealement tu montrerais un retry bouton sous le error message, qui callerait simplement this.fetchQuote();
+    /*
+      le problem avec ca c'est que comme on return ici si il y a une erreur, les boutons ne sont plus presents, et la seule options pour le user est de rafraichir la page.
+      ce qui est ok. Mais idealement tu montrerais un retry bouton sous le error message, qui callerait simplement this.fetchQuote();
+    */
 
-    // ZBRA
-    // if (isLoading) {
-    //   return <p>Loading ...</p>;
-    // }
-    /* au final meme si ce state fonctionne bien ici, il apporte rien de plus que avec l'image donc autant en garder qu'un*/
     return (
       <div className="app">
         <Hero
@@ -203,9 +183,7 @@ class App extends Component {
           heroActionsTitle={'Select a Category'}
           onHeroActionClick={this.handleVote}
         />
-        {/* {isLoading ? <img alt="Loading..." src="https://i.imgur.com/LVHmLnb.gif" /> : ''} */}
         {/*
-          // ZBRA 
           Comme tu fais rien dans le cas ou isLoading est falsy tu peu utiliser la syntax ci-dessous, c'est juste une question de preference.
           Dans une plus grosse app avec plusieurs endroit ou on aurait un Loader on l'aurait extrait dans son propre component en lui passant des props
           si on veut qu'il soit configurable (genre passer differentes images etc). 
