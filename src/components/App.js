@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import '../App.css';
-import Table from './Table';
+import Table from './table';
 import Hero from './Hero';
 
 const API = 'http://api.icndb.com/jokes/random';
