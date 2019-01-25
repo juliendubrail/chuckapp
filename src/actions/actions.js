@@ -1,42 +1,39 @@
-export function jokeHasErrored(bool) {
-    return {
-        type: 'JOKE_HAS_ERRORED',
-        hasErrored: bool 
-    }
-}
+import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS } from '../actions/actionTypes';
 
-export function jokeIsLoading(bool) {
-    return {
-        type: 'JOKE_IS_LOADING',
-        isLoading: bool
-    }
-}
+export const jokeHasErrored = () => ({
+  type: JOKE_HAS_ERRORED,
+});
 
-export function jokeFetchDataSuccess (joke) {
-    return {
-        type: 'JOKE_FETCH_DATA_SUCCESS',
-        joke
-    }
-}
+export const jokeIsLoading = () => ({
+  type: JOKE_IS_LOADING,
+});
 
-export function jokeFetchData(url) {
-    return (dispatch) => {
-        dispatch(jokeIsLoading(true));
+export const jokeFetchDataSuccess = data => ({
+  type: JOKE_FETCH_DATA_SUCCESS,
+  data,
+});
 
-        fetch(url)
-            .then((response) => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
+export const jokeFetchData = url => {
+  return dispatch => {
+    dispatch(jokeIsLoading());
+    // on dispatch le resultat d'appeler jokeIsLoading donc l'objet : { type: JOKE_IS_LOADING } qui sera passer en second
+    // argument du reducer par store.dispatch ci-dessous (regarde l'ensemble de createStore dans notes.js):
+    /*
+        const dispatch = (action) => { <== ici l'action est { type: JOKE_IS_LOADING }
+        state = reducer(state, action); <== l'action est passée, avec le state, au reducer qu'on a passé a la fonction createStore au moment ou on a appelé createStore (dans configureStore.js). C'est pour ca qu'on a acces au state et a l'action dans le reducer a chaque fois qu'on appel dispatch() 
+        listeners.forEach(listener => listener());
+        };
+    */
 
-                dispatch(jokeIsLoading(false));
-
-                return response;
-            })
-            .then((response) => response.json())
-            .then((joke) => dispatch(jokeFetchDataSuccess(joke)))
-            .catch(() => dispatch(jokeHasErrored(true)));
-    };
-}
-
-
+    fetch('http://api.icndb.com/jokes/random')
+      .then(response => {
+        if (!response.ok) {
+          dispatch(jokeHasErrored());
+        }
+        return response;
+      })
+      .then(response => response.json())
+      .then(joke => dispatch(jokeFetchDataSuccess(joke)))
+      .catch(() => dispatch(jokeHasErrored()));
+  };
+};

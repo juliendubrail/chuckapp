@@ -5,12 +5,11 @@ const HeroActions = ({ heroActionsTitle, onHeroActionClick }) => {
   return (
     <div>
       <h5>{heroActionsTitle}</h5>
-      <Button text={'Yay'} onClick={onHeroActionClick} />
+      <Button text={'Yay'} onClick={() => onHeroActionClick(true)} />
       <Button text={'Nay'} onClick={() => onHeroActionClick(false)} />
     </div>
   );
 };
-
 
 const Hero = props => {
   const { title, heroActions, heroActionsTitle, onHeroActionClick } = props;
