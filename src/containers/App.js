@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { jokeFetchData } from '../actions/actions';
+import { jokeFetchData, categoryClicked } from '../actions/actions';
 
-import Table from '../components/table';
+//import Table from '../components/table';
 import Hero from '../components/Hero';
 
 import './App.css';
@@ -19,11 +19,12 @@ class App extends Component {
     // appeler un action creator (comment tu fais dans componentDidMount) ici pour updater le redux store apres chaque vote
     // cette action creator doit:
     // 1- dispatcher une action qui une fois recu par le redcuer sauvegardera l'id de la current joke comment le premiere elements de la 'likedJokesIds' array ou dans la 'dislikedJokesIds' array en fonction de la valeur de like (true or false)
-    // 2- directement apres il faut fetch une nouvelle action, donc appeler dispatch(jokeFetchData()), du coup l'action creator pourrait etre un thunk.
+    this.props.dispatch(categoryClicked(liked));
+    this.fetchJoke();
   };
 
   render() {
-    const { error, loading, currentJoke } = this.props; //
+    const { error, loading, currentJoke, likedJokes, allJokes, dislikedJokes } = this.props; //
     if (error) {
       return (
         <div className="app">

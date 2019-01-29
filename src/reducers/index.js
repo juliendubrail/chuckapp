@@ -1,4 +1,4 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS } from '../actions/actionTypes';
+import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE } from '../actions/actionTypes';
 
 const initialState = {
   currentJoke: {},
@@ -48,6 +48,25 @@ const jokesReducer = (state = initialState, action) => {
       };
     // case LIKED_JOKE: a rajouter
     // case DISLIKED_JOKE: a rajouter
+    case LIKED_JOKE:
+ 
+    return {
+      ...state,
+      likedJokesIds: [
+        ...state.likedJokesIds,
+        state.currentJoke.id
+      ]
+    };
+    case DISLIKED_JOKE:
+ 
+    return {
+      ...state,
+      dislikedJokesIds: [
+        ...state.dislikedJokesIds, 
+        state.currentJoke.id
+      ]
+    };
+
     default:
       return state;
   }

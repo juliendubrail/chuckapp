@@ -1,4 +1,4 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS } from '../actions/actionTypes';
+import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE } from '../actions/actionTypes';
 
 export const jokeHasErrored = () => ({
   type: JOKE_HAS_ERRORED,
@@ -11,7 +11,17 @@ export const jokeIsLoading = () => ({
 export const jokeFetchDataSuccess = data => ({
   type: JOKE_FETCH_DATA_SUCCESS,
   data,
+}); 
+
+export const jokeIsLiked = (id) => ({
+    type: LIKED_JOKE,
+    payload: id
 });
+
+export const jokeIsDisliked = (id) => ({
+    type: DISLIKED_JOKE,
+    payload: id
+})
 
 export const jokeFetchData = url => {
   return dispatch => {
@@ -37,3 +47,15 @@ export const jokeFetchData = url => {
       .catch(() => dispatch(jokeHasErrored()));
   };
 };
+
+export const categoryClicked = liked => {
+if (liked) {
+  return dispatch => {
+    dispatch(jokeIsLiked())
+  }
+} else {
+  return dispatch => {
+    dispatch(jokeIsDisliked())
+  }
+}
+}
