@@ -49,7 +49,6 @@ const jokesReducer = (state = initialState, action) => {
     // case LIKED_JOKE: a rajouter
     // case DISLIKED_JOKE: a rajouter
     case LIKED_JOKE:
- 
     return {
       ...state,
       byId: {

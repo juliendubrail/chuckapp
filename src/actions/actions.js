@@ -13,17 +13,17 @@ export const jokeFetchDataSuccess = data => ({
   data,
 }); 
 
-export const jokeIsLiked = (id) => ({
+export const jokeIsLiked = liked => ({
     type: LIKED_JOKE,
-    payload: id
+    liked
 });
 
-export const jokeIsDisliked = (id) => ({
+export const jokeIsDisliked = id => ({
     type: DISLIKED_JOKE,
     payload: id
 });
 
-export const jokeIsRemoved = (id) => ({
+export const jokeIsRemoved = id => ({
   type: REMOVE_JOKE,
   payload: id
 })
