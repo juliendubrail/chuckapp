@@ -1,4 +1,11 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE, REMOVE_JOKE } from '../actions/actionTypes';
+import {
+  JOKE_HAS_ERRORED,
+  JOKE_IS_LOADING,
+  JOKE_FETCH_DATA_SUCCESS,
+  LIKED_JOKE,
+  DISLIKED_JOKE,
+  REMOVE_JOKE,
+} from '../actions/actionTypes';
 
 export const jokeHasErrored = () => ({
   type: JOKE_HAS_ERRORED,
@@ -11,8 +18,9 @@ export const jokeIsLoading = () => ({
 export const jokeFetchDataSuccess = data => ({
   type: JOKE_FETCH_DATA_SUCCESS,
   data,
-}); 
+});
 
+<<<<<<< HEAD
 export const jokeIsLiked = liked => ({
     type: LIKED_JOKE,
     liked
@@ -21,12 +29,22 @@ export const jokeIsLiked = liked => ({
 export const jokeIsDisliked = id => ({
     type: DISLIKED_JOKE,
     payload: id
+=======
+export const jokeIsLiked = id => ({
+  type: LIKED_JOKE,
+  payload: id,
+});
+
+export const jokeIsDisliked = id => ({
+  type: DISLIKED_JOKE,
+  payload: id,
+>>>>>>> ab35c1653c3f01c755ce8688920a73df69630faf
 });
 
 export const jokeIsRemoved = id => ({
   type: REMOVE_JOKE,
-  payload: id
-})
+  payload: id,
+});
 
 export const jokeFetchData = url => {
   return dispatch => {
@@ -54,19 +72,17 @@ export const jokeFetchData = url => {
 };
 
 export const categoryClicked = liked => {
-if (liked) {
   return dispatch => {
-    dispatch(jokeIsLiked())
-  }
-} else {
-  return dispatch => {
-    dispatch(jokeIsDisliked())
-  }
-}
-}
+    if (liked) {
+      dispatch(jokeIsLiked());
+    } else {
+      dispatch(jokeIsDisliked());
+    }
+  };
+};
 
-export const remove = id  => {
+export const remove = id => {
   return dispatch => {
-    dispatch(jokeIsRemoved(id))
-  }
-}
+    dispatch(jokeIsRemoved(id));
+  };
+};
