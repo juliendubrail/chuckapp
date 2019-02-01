@@ -1,4 +1,11 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE, REMOVE_JOKE } from '../actions/actionTypes';
+import {
+  JOKE_HAS_ERRORED,
+  JOKE_IS_LOADING,
+  JOKE_FETCH_DATA_SUCCESS,
+  LIKED_JOKE,
+  DISLIKED_JOKE,
+  REMOVE_JOKE,
+} from '../actions/actionTypes';
 
 const initialState = {
   currentJoke: {},
@@ -46,43 +53,33 @@ const jokesReducer = (state = initialState, action) => {
         loading: false, // on reset loading a false
         error: false, // et error a false (meme si il a peut etre jamais ete set a true, mais peut etre que juste avant on a eu un fetch fail et donc error est true, donc il faut le reset a false quand on a un fetch success)
       };
-    // case LIKED_JOKE: a rajouter
-    // case DISLIKED_JOKE: a rajouter
     case LIKED_JOKE:
- 
-    return {
-      ...state,
-      byId: {
-        ...state.byId,
-        [state.currentJoke.id]: {...state.currentJoke, liked}
-    },
-      likedJokesIds: [
-        ...state.likedJokesIds,
-        state.currentJoke.id
-      ]
-    };
+      return {
+        ...state,
+        // on a deja sauver la joke dans byId au quand on a fetch (regarde le 'case JOKE_FETCH_DATA_SUCCESS')
+        // donc pas besoin de le faire ici.
+        likedJokesIds: [state.currentJoke.id, ...state.likedJokesIds],
+        // on veut que la nouvelle joke apparaisse en haut de la list. Donc je la met au debut de l'array, comme ca
+        // le component qui map sur cette array pour render la joke renderera celle la en premier.
+      };
     case DISLIKED_JOKE:
- 
-    return {
-      ...state,
-      dislikedJokesIds: [
-        ...state.dislikedJokesIds, 
-        state.currentJoke.id
-      ]
-    }; 
+      return {
+        ...state,
+        dislikedJokesIds: [state.currentJoke.id, ...state.dislikedJokesIds],
+      };
 
-    case REMOVE_JOKE: 
-    const jokeToRemove = state.byId[action.id];
-    const targetArray = jokeToRemove.liked ? 'likedJokesIds' : 'dislikedJokesIds';
-    const updatedJokesArray = state[targetArray].filter(key => key !== action.id);
-    const newById = { ...state.byId };
-    delete newById[action.id];
+    case REMOVE_JOKE:
+      const jokeToRemove = state.byId[action.id];
+      const targetArray = jokeToRemove.liked ? 'likedJokesIds' : 'dislikedJokesIds';
+      const updatedJokesArray = state[targetArray].filter(key => key !== action.id);
+      const newById = { ...state.byId };
+      delete newById[action.id];
 
-    return {
-      ...state,
-      byId: newById,
-      [targetArray]: updatedJokesArray,
-    }
+      return {
+        ...state,
+        byId: newById,
+        [targetArray]: updatedJokesArray,
+      };
 
     default:
       return state;
