@@ -1,4 +1,4 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE } from '../actions/actionTypes';
+import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE, REMOVE_JOKE } from '../actions/actionTypes';
 
 const initialState = {
   currentJoke: {},
@@ -52,6 +52,10 @@ const jokesReducer = (state = initialState, action) => {
  
     return {
       ...state,
+      byId: {
+        ...state.byId,
+        [state.currentJoke.id]: {...state.currentJoke, liked}
+    },
       likedJokesIds: [
         ...state.likedJokesIds,
         state.currentJoke.id
@@ -65,7 +69,20 @@ const jokesReducer = (state = initialState, action) => {
         ...state.dislikedJokesIds, 
         state.currentJoke.id
       ]
-    };
+    }; 
+
+    case REMOVE_JOKE: 
+    const jokeToRemove = state.byId[action.id];
+    const targetArray = jokeToRemove.liked ? 'likedJokesIds' : 'dislikedJokesIds';
+    const updatedJokesArray = state[targetArray].filter(key => key !== action.id);
+    const newById = { ...state.byId };
+    delete newById[action.id];
+
+    return {
+      ...state,
+      byId: newById,
+      [targetArray]: updatedJokesArray,
+    }
 
     default:
       return state;

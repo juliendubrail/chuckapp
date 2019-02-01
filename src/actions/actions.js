@@ -1,4 +1,4 @@
-import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE } from '../actions/actionTypes';
+import { JOKE_HAS_ERRORED, JOKE_IS_LOADING, JOKE_FETCH_DATA_SUCCESS, LIKED_JOKE, DISLIKED_JOKE, REMOVE_JOKE } from '../actions/actionTypes';
 
 export const jokeHasErrored = () => ({
   type: JOKE_HAS_ERRORED,
@@ -21,6 +21,11 @@ export const jokeIsLiked = (id) => ({
 export const jokeIsDisliked = (id) => ({
     type: DISLIKED_JOKE,
     payload: id
+});
+
+export const jokeIsRemoved = (id) => ({
+  type: REMOVE_JOKE,
+  payload: id
 })
 
 export const jokeFetchData = url => {
@@ -58,4 +63,10 @@ if (liked) {
     dispatch(jokeIsDisliked())
   }
 }
+}
+
+export const remove = id  => {
+  return dispatch => {
+    dispatch(jokeIsRemoved(id))
+  }
 }

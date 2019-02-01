@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { jokeFetchData, categoryClicked } from '../actions/actions';
+import { jokeFetchData, categoryClicked, remove } from '../actions/actions';
 
 import Table from '../components/table';
 import Hero from '../components/Hero';
@@ -23,8 +23,8 @@ class App extends Component {
     this.fetchJoke();
   };
 
-  removeQuote = () => {
-    console.log("joke removed");
+  removeQuote = id => {
+    this.props.dispatch(remove(id));
   }
 
   render() {
@@ -56,11 +56,6 @@ class App extends Component {
           <Table data={dislikedJokes} removeQuote={this.removeQuote} /> 
           <Table data={allJokes} removeQuote={this.removeQuote} />
         </div> 
-     {/*    <div className="tablecontainer">
-          <Table data={likedJokesIds}  />
-          <Table data={dislikedJokesIds}  />
-          <Table data={byId.joke}  />
-        </div> */}
       </div>
     );
   }
