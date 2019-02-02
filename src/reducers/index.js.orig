@@ -54,35 +54,40 @@ const jokesReducer = (state = initialState, action) => {
         error: false, // et error a false (meme si il a peut etre jamais ete set a true, mais peut etre que juste avant on a eu un fetch fail et donc error est true, donc il faut le reset a false quand on a un fetch success)
       };
     case LIKED_JOKE:
+<<<<<<< HEAD
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [state.currentJoke.id]: {...state.currentJoke, liked}
+    },
+      likedJokesIds: [
+        ...state.likedJokesIds,
+        state.currentJoke.id
+      ]
+    };
+=======
       return {
         ...state,
         // on a deja sauver la joke dans byId au quand on a fetch (regarde le 'case JOKE_FETCH_DATA_SUCCESS')
-        // donc pas besoin de le faire ici.i
-        byId: {
-          ...state.byId,
-          [state.currentJoke.id]: {...state.currentJoke, liked:true}
-        },
+        // donc pas besoin de le faire ici.
         likedJokesIds: [state.currentJoke.id, ...state.likedJokesIds],
         // on veut que la nouvelle joke apparaisse en haut de la list. Donc je la met au debut de l'array, comme ca
         // le component qui map sur cette array pour render la joke renderera celle la en premier.
       };
+>>>>>>> ab35c1653c3f01c755ce8688920a73df69630faf
     case DISLIKED_JOKE:
       return {
         ...state,
-        byId: {
-          ...state.byId,
-          [state.currentJoke.id]: {...state.currentJoke, liked:false}
-        },
         dislikedJokesIds: [state.currentJoke.id, ...state.dislikedJokesIds],
       };
 
     case REMOVE_JOKE:
-      const jokeToRemove = state.byId[action.payload];
+      const jokeToRemove = state.byId[action.id];
       const targetArray = jokeToRemove.liked ? 'likedJokesIds' : 'dislikedJokesIds';
-      const updatedJokesArray = state[targetArray].filter(key => key !== action.payload);
+      const updatedJokesArray = state[targetArray].filter(key => key !== action.id);
       const newById = { ...state.byId };
-      //delete state.byId[action.id];
-      delete newById[action.payload];
+      delete newById[action.id];
 
       return {
         ...state,

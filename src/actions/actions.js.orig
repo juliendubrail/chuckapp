@@ -20,14 +20,25 @@ export const jokeFetchDataSuccess = data => ({
   data,
 });
 
+<<<<<<< HEAD
+export const jokeIsLiked = liked => ({
+    type: LIKED_JOKE,
+    liked
+});
+
+export const jokeIsDisliked = id => ({
+    type: DISLIKED_JOKE,
+    payload: id
+=======
 export const jokeIsLiked = id => ({
   type: LIKED_JOKE,
-  payload: { id, liked: true },
+  payload: id,
 });
 
 export const jokeIsDisliked = id => ({
   type: DISLIKED_JOKE,
   payload: id,
+>>>>>>> ab35c1653c3f01c755ce8688920a73df69630faf
 });
 
 export const jokeIsRemoved = id => ({
