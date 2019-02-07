@@ -35,18 +35,10 @@ export const jokeIsRemoved = id => ({
   payload: id,
 });
 
+// TODO: refactor jokeFetchData pour utiliser async / await vs .then
 export const jokeFetchData = url => {
   return dispatch => {
     dispatch(jokeIsLoading());
-    // on dispatch le resultat d'appeler jokeIsLoading donc l'objet : { type: JOKE_IS_LOADING } qui sera passer en second
-    // argument du reducer par store.dispatch ci-dessous (regarde l'ensemble de createStore dans notes.js):
-    /*
-        const dispatch = (action) => { <== ici l'action est { type: JOKE_IS_LOADING }
-        state = reducer(state, action); <== l'action est passée, avec le state, au reducer qu'on a passé a la fonction createStore au moment ou on a appelé createStore (dans configureStore.js). C'est pour ca qu'on a acces au state et a l'action dans le reducer a chaque fois qu'on appel dispatch() 
-        listeners.forEach(listener => listener());
-        };
-    */
-
     fetch('http://api.icndb.com/jokes/random')
       .then(response => {
         if (!response.ok) {
@@ -67,11 +59,5 @@ export const categoryClicked = liked => {
     } else {
       dispatch(jokeIsDisliked());
     }
-  };
-};
-
-export const remove = id => {
-  return dispatch => {
-    dispatch(jokeIsRemoved(id));
   };
 };

@@ -25,53 +25,38 @@ const jokesReducer = (state = initialState, action) => {
         error: true,
       };
     case JOKE_IS_LOADING:
-      // il faut tout le temps retourner une nouvelle version du state, donc on crée un object, copie le state dedans avec ... puis override les propritée
-      // que cette action est censée modifier dans le state. Donc loading sera true jusqu'a ce qu'une autre action soit dispatchée:
-      // 1- soit le fetch fonctionne et on dispatch l'objet (l'action) retournée par la fonction (action creator) jokeFetchDataSuccess, et dans ce cas la le 'case JOKE_FETCH_DATA_SUCCESS' en dessous va intervenir
-      // (et parmis les operation qu'on fait dans ce case sur le state on reset loading a false)
-      // 2- soit le fetch fail et on dispatch l'objet (l'action) retournée par la fonction (action creator) jokeHasErrored, et dans ce cas la le 'case JOKE_HAS_ERRORED:' au dessus va intervenir, et on resset loading a false,
-      // on set error a true.
       return {
         ...state,
         loading: true,
         error: false,
       };
     case JOKE_FETCH_DATA_SUCCESS:
-      // ici on recoit l'action dispatcher par l'appel a la fonction jokeFetchDataSuccess (action creator), qui est un object comme ca:
-      // action = {
-      //   type: JOKE_FETCH_DATA_SUCCESS,
-      //   data,
-      // }
       const { value } = action.data;
       return {
         ...state,
-        currentJoke: value, // la joke recue devient la currentJoke
+        currentJoke: value,
         byId: {
-          ...state.byId, // on copied toutes les precedentes key/value pairs deja enregistrée (imagine qu'on a deja sucessfully fetch 10 jokes)
-          [value.id]: value, // et on rajoute la nouvelle
+          ...state.byId,
+          [value.id]: value,
         },
-        loading: false, // on reset loading a false
-        error: false, // et error a false (meme si il a peut etre jamais ete set a true, mais peut etre que juste avant on a eu un fetch fail et donc error est true, donc il faut le reset a false quand on a un fetch success)
+        loading: false,
+        error: false,
       };
     case LIKED_JOKE:
       return {
         ...state,
-        // on a deja sauver la joke dans byId au quand on a fetch (regarde le 'case JOKE_FETCH_DATA_SUCCESS')
-        // donc pas besoin de le faire ici.i
         byId: {
           ...state.byId,
-          [state.currentJoke.id]: {...state.currentJoke, liked:true}
+          [state.currentJoke.id]: { ...state.currentJoke, liked: true },
         },
         likedJokesIds: [state.currentJoke.id, ...state.likedJokesIds],
-        // on veut que la nouvelle joke apparaisse en haut de la list. Donc je la met au debut de l'array, comme ca
-        // le component qui map sur cette array pour render la joke renderera celle la en premier.
       };
     case DISLIKED_JOKE:
       return {
         ...state,
         byId: {
           ...state.byId,
-          [state.currentJoke.id]: {...state.currentJoke, liked:false}
+          [state.currentJoke.id]: { ...state.currentJoke, liked: false },
         },
         dislikedJokesIds: [state.currentJoke.id, ...state.dislikedJokesIds],
       };
@@ -81,7 +66,6 @@ const jokesReducer = (state = initialState, action) => {
       const targetArray = jokeToRemove.liked ? 'likedJokesIds' : 'dislikedJokesIds';
       const updatedJokesArray = state[targetArray].filter(key => key !== action.payload);
       const newById = { ...state.byId };
-      //delete state.byId[action.id];
       delete newById[action.payload];
 
       return {
